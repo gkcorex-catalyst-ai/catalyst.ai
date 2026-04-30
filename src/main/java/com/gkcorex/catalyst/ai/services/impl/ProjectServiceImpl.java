@@ -5,6 +5,7 @@ import com.gkcorex.catalyst.ai.dtos.project.ProjectResponse;
 import com.gkcorex.catalyst.ai.dtos.project.ProjectSummaryResponse;
 import com.gkcorex.catalyst.ai.entities.Project;
 import com.gkcorex.catalyst.ai.entities.User;
+import com.gkcorex.catalyst.ai.exceptions.ResourceNotFoundException;
 import com.gkcorex.catalyst.ai.mappers.ProjectMapper;
 import com.gkcorex.catalyst.ai.repositories.ProjectRepository;
 import com.gkcorex.catalyst.ai.repositories.UserRepository;
@@ -45,7 +46,10 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public ProjectResponse createProject(Long userId, ProjectRequest projectRequest) {
-    User user = userRepository.findById(userId).orElseThrow();
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found", userId.toString()));
     Project project =
         Project.builder().name(projectRequest.name()).owner(user).isPublic(true).build();
 
@@ -74,6 +78,9 @@ public class ProjectServiceImpl implements ProjectService {
   //    INTERNAL FUNCTIONS
 
   private Project getAccessibleProjectById(Long userId, Long projectId) {
-    return projectRepository.findAccessibleProjectById(userId, projectId).orElseThrow();
+    return projectRepository
+        .findAccessibleProjectById(userId, projectId)
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Project not found", projectId.toString()));
   }
 }

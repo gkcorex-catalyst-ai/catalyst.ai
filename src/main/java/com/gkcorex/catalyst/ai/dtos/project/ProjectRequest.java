@@ -1,3 +1,5 @@
 package com.gkcorex.catalyst.ai.dtos.project;
 
-public record ProjectRequest(String name) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record ProjectRequest(@NotBlank String name) {}

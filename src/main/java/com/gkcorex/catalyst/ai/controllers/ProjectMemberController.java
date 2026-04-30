@@ -4,6 +4,7 @@ import com.gkcorex.catalyst.ai.dtos.member.InviteMemberRequest;
 import com.gkcorex.catalyst.ai.dtos.member.MemberResponse;
 import com.gkcorex.catalyst.ai.dtos.member.UpdateMemberRoleRequest;
 import com.gkcorex.catalyst.ai.services.ProjectMemberService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class ProjectMemberController {
 
   @PostMapping
   public ResponseEntity<MemberResponse> inviteMember(
-      @PathVariable Long projectId, @RequestBody InviteMemberRequest inviteMemberRequest) {
+      @PathVariable Long projectId, @RequestBody @Valid InviteMemberRequest inviteMemberRequest) {
     Long userId = 1L;
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(projectMemberService.inviteMember(userId, projectId, inviteMemberRequest));
@@ -38,7 +39,7 @@ public class ProjectMemberController {
   public ResponseEntity<MemberResponse> updateMemberRole(
       @PathVariable Long projectId,
       @PathVariable Long memberId,
-      @RequestBody UpdateMemberRoleRequest updateMemberRoleRequest) {
+      @RequestBody @Valid UpdateMemberRoleRequest updateMemberRoleRequest) {
     Long userId = 1L;
     return ResponseEntity.ok(
         projectMemberService.updateMemberRole(

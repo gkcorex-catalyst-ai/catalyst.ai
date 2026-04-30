@@ -7,6 +7,7 @@ import com.gkcorex.catalyst.ai.entities.Project;
 import com.gkcorex.catalyst.ai.entities.ProjectMember;
 import com.gkcorex.catalyst.ai.entities.ProjectMemberId;
 import com.gkcorex.catalyst.ai.entities.User;
+import com.gkcorex.catalyst.ai.exceptions.ResourceNotFoundException;
 import com.gkcorex.catalyst.ai.mappers.ProjectMemberMapper;
 import com.gkcorex.catalyst.ai.repositories.ProjectMemberRepository;
 import com.gkcorex.catalyst.ai.repositories.ProjectRepository;
@@ -15,7 +16,6 @@ import com.gkcorex.catalyst.ai.services.ProjectMemberService;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -44,7 +44,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     List<MemberResponse> memberResponses =
         projectMemberRepository.findByIdProjectId(projectId).stream()
             .map(projectMemberMapper::mapProjectMemberToMemberResponse)
-            .collect(Collectors.toList());
+            .toList();
     memberResponseList.addAll(memberResponses);
     return memberResponseList;
   }
@@ -56,7 +56,11 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     if (!project.getOwner().getId().equals(userId))
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Cannot Invite Members with email: " + inviteMemberRequest.email());
-    User invitee = userRepository.findByEmail(inviteMemberRequest.email()).orElseThrow();
+    User invitee =
+        userRepository
+            .findByEmail(inviteMemberRequest.email())
+            .orElseThrow(
+                () -> new ResourceNotFoundException("User not found", inviteMemberRequest.email()));
     if (invitee.getId().equals(userId))
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Invite Yourself");
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, invitee.getId());
@@ -83,7 +87,12 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Cannot Update Member Role with Member Id: " + memberId);
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
-    ProjectMember member = projectMemberRepository.findById(projectMemberId).orElseThrow();
+    ProjectMember member =
+        projectMemberRepository
+            .findById(projectMemberId)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException("Member not found", projectMemberId.toString()));
     member.setProjectRole(updateMemberRoleRequest.role());
     member = projectMemberRepository.save(member);
     return projectMemberMapper.mapProjectMemberToMemberResponse(member);
@@ -104,6 +113,9 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
   //    INTERNAL FUNCTIONS
   private Project getAccessibleProjectById(Long userId, Long projectId) {
-    return projectRepository.findAccessibleProjectById(userId, projectId).orElseThrow();
+    return projectRepository
+        .findAccessibleProjectById(userId, projectId)
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Project not found", projectId.toString()));
   }
 }

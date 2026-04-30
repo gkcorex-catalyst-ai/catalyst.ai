@@ -6,6 +6,7 @@ import com.gkcorex.catalyst.ai.dtos.auth.SignUpRequest;
 import com.gkcorex.catalyst.ai.dtos.auth.UserProfileResponse;
 import com.gkcorex.catalyst.ai.services.AuthService;
 import com.gkcorex.catalyst.ai.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,12 +24,12 @@ public class AuthController {
   UserService userService;
 
   @PostMapping("/signup")
-  public ResponseEntity<AuthResponse> signup(@RequestBody SignUpRequest signUpRequest) {
+  public ResponseEntity<AuthResponse> signup(@RequestBody @Valid SignUpRequest signUpRequest) {
     return ResponseEntity.ok(authService.signup(signUpRequest));
   }
 
   @PostMapping("/login")
-  public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
     return ResponseEntity.ok(authService.login(loginRequest));
   }
 

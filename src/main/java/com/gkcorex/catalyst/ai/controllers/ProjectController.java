@@ -4,6 +4,7 @@ import com.gkcorex.catalyst.ai.dtos.project.ProjectRequest;
 import com.gkcorex.catalyst.ai.dtos.project.ProjectResponse;
 import com.gkcorex.catalyst.ai.dtos.project.ProjectSummaryResponse;
 import com.gkcorex.catalyst.ai.services.ProjectService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class ProjectController {
   }
 
   @PostMapping
-  public ResponseEntity<ProjectResponse> createProject(@RequestBody ProjectRequest projectRequest) {
+  public ResponseEntity<ProjectResponse> createProject(
+      @RequestBody @Valid ProjectRequest projectRequest) {
     Long userId = 1L;
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(projectService.createProject(userId, projectRequest));
@@ -41,7 +43,7 @@ public class ProjectController {
 
   @PatchMapping("/{projectId}")
   public ResponseEntity<ProjectResponse> updateProject(
-      @PathVariable Long projectId, @RequestBody ProjectRequest projectRequest) {
+      @PathVariable Long projectId, @RequestBody @Valid ProjectRequest projectRequest) {
     Long userId = 1L;
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(projectService.updateProject(userId, projectId, projectRequest));

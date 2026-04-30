@@ -1,3 +1,10 @@
 package com.gkcorex.catalyst.ai.dtos.auth;
 
-public record SignUpRequest(String email, String name, String password) {}
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record SignUpRequest(
+    @Email @NotBlank String email,
+    @Size(min = 3, max = 100) String name,
+    @Size(min = 8, max = 16) String password) {}

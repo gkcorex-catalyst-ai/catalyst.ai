@@ -9,11 +9,21 @@
 **Backend Technology Stack:** 
 - Java 21
 - Spring Boot 4.0.6
-- Maven 
+- Maven
+
+**Services:**
+- Auth Service
+- Project Service
+- Project Member Service
+
+Design:
+- 3 Layer (Controller, Service, Repository)
+- Global Exception Handlers
 
 **Dependencies:** 
 - Spring Data JPA
 - PostgreSQL Driver
+- Validation
 
 **Plugins:** 
 - Lombok
@@ -30,4 +40,3 @@
 **API & Management:** 
 - REST API's
 - Postman
-
