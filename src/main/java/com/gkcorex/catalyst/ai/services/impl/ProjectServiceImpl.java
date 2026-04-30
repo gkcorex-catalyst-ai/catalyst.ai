@@ -4,9 +4,13 @@ import com.gkcorex.catalyst.ai.dtos.project.ProjectRequest;
 import com.gkcorex.catalyst.ai.dtos.project.ProjectResponse;
 import com.gkcorex.catalyst.ai.dtos.project.ProjectSummaryResponse;
 import com.gkcorex.catalyst.ai.entities.Project;
+import com.gkcorex.catalyst.ai.entities.ProjectMember;
+import com.gkcorex.catalyst.ai.entities.ProjectMemberId;
 import com.gkcorex.catalyst.ai.entities.User;
+import com.gkcorex.catalyst.ai.enums.ProjectRole;
 import com.gkcorex.catalyst.ai.exceptions.ResourceNotFoundException;
 import com.gkcorex.catalyst.ai.mappers.ProjectMapper;
+import com.gkcorex.catalyst.ai.repositories.ProjectMemberRepository;
 import com.gkcorex.catalyst.ai.repositories.ProjectRepository;
 import com.gkcorex.catalyst.ai.repositories.UserRepository;
 import com.gkcorex.catalyst.ai.services.ProjectService;
@@ -16,9 +20,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,8 @@ public class ProjectServiceImpl implements ProjectService {
   ProjectRepository projectRepository;
 
   UserRepository userRepository;
+
+  ProjectMemberRepository projectMemberRepository;
 
   ProjectMapper projectMapper;
 
@@ -46,14 +50,24 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public ProjectResponse createProject(Long userId, ProjectRequest projectRequest) {
-    User user =
+    User owner =
         userRepository
             .findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("User not found", userId.toString()));
-    Project project =
-        Project.builder().name(projectRequest.name()).owner(user).isPublic(true).build();
-
+    Project project = Project.builder().name(projectRequest.name()).isPublic(true).build();
     project = projectRepository.save(project);
+
+    ProjectMemberId projectMemberId = new ProjectMemberId(project.getId(), owner.getId());
+    ProjectMember projectMember =
+        ProjectMember.builder()
+            .id(projectMemberId)
+            .projectRole(ProjectRole.OWNER)
+            .project(project)
+            .user(owner)
+            .invitedAt(Instant.now())
+            .acceptedAt(Instant.now())
+            .build();
+    projectMemberRepository.save(projectMember);
     return projectMapper.mapEntityToResponse(project);
   }
 
@@ -68,9 +82,6 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public void softDelete(Long userId, Long projectId) {
     Project project = getAccessibleProjectById(userId, projectId);
-    if (!project.getOwner().getId().equals(userId))
-      throw new ResponseStatusException(
-          HttpStatus.FORBIDDEN, "User not allowed to delete project with Id: " + projectId);
     project.setDeletedAt(Instant.now());
     projectRepository.save(project);
   }

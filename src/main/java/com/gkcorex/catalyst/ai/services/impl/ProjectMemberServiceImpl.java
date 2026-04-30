@@ -13,6 +13,7 @@ import com.gkcorex.catalyst.ai.repositories.ProjectMemberRepository;
 import com.gkcorex.catalyst.ai.repositories.ProjectRepository;
 import com.gkcorex.catalyst.ai.repositories.UserRepository;
 import com.gkcorex.catalyst.ai.services.ProjectMemberService;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Transactional
 public class ProjectMemberServiceImpl implements ProjectMemberService {
 
   ProjectRepository projectRepository;
@@ -40,27 +42,22 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
   public List<MemberResponse> getProjectMembers(Long userId, Long projectId) {
     Project project = getAccessibleProjectById(userId, projectId);
     List<MemberResponse> memberResponseList = new ArrayList<>();
-    memberResponseList.add(projectMemberMapper.mapOwnerToMemberResponse(project.getOwner()));
-    List<MemberResponse> memberResponses =
-        projectMemberRepository.findByIdProjectId(projectId).stream()
-            .map(projectMemberMapper::mapProjectMemberToMemberResponse)
-            .toList();
-    memberResponseList.addAll(memberResponses);
-    return memberResponseList;
+    return projectMemberRepository.findByIdProjectId(projectId).stream()
+        .map(projectMemberMapper::mapProjectMemberToMemberResponse)
+        .toList();
   }
 
   @Override
   public MemberResponse inviteMember(
       Long userId, Long projectId, InviteMemberRequest inviteMemberRequest) {
     Project project = getAccessibleProjectById(userId, projectId);
-    if (!project.getOwner().getId().equals(userId))
-      throw new ResponseStatusException(
-          HttpStatus.FORBIDDEN, "Cannot Invite Members with email: " + inviteMemberRequest.email());
     User invitee =
         userRepository
-            .findByEmail(inviteMemberRequest.email())
+            .findByUsername(inviteMemberRequest.username())
             .orElseThrow(
-                () -> new ResourceNotFoundException("User not found", inviteMemberRequest.email()));
+                () ->
+                    new ResourceNotFoundException(
+                        "User not found", inviteMemberRequest.username()));
     if (invitee.getId().equals(userId))
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Invite Yourself");
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, invitee.getId());
@@ -82,10 +79,6 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
   @Override
   public MemberResponse updateMemberRole(
       Long userId, Long projectId, Long memberId, UpdateMemberRoleRequest updateMemberRoleRequest) {
-    Project project = getAccessibleProjectById(userId, projectId);
-    if (!project.getOwner().getId().equals(userId))
-      throw new ResponseStatusException(
-          HttpStatus.FORBIDDEN, "Cannot Update Member Role with Member Id: " + memberId);
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
     ProjectMember member =
         projectMemberRepository
@@ -100,10 +93,6 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
   @Override
   public void deleteMember(Long userId, Long projectId, Long memberId) {
-    Project project = getAccessibleProjectById(userId, projectId);
-    if (!project.getOwner().getId().equals(userId))
-      throw new ResponseStatusException(
-          HttpStatus.FORBIDDEN, "Cannot Delete Member with Member Id: " + memberId);
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
     if (!projectMemberRepository.existsById(projectMemberId))
       throw new ResponseStatusException(
