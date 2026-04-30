@@ -8,10 +8,17 @@
 
 **Backend Technology Stack:** 
 - Java 21
-- Spring Boot 
+- Spring Boot 4.0.6
 - Maven 
+
+**Dependencies:** 
 - Spring Data JPA
+- PostgreSQL Driver
+
+**Plugins:** 
 - Lombok
+- Mapstruct
+- Spotless Apply
 
 **Database & Management:**
 - PostgresSQL 15
@@ -23,3 +30,4 @@
 **API & Management:** 
 - REST API's
 - Postman
+
