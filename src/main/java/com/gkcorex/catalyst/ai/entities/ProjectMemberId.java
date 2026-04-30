@@ -1,7 +1,7 @@
 package com.gkcorex.catalyst.ai.entities;
 
 public class ProjectMemberId {
-    Long projectId;
+  Long projectId;
 
-    Long userId;
+  Long userId;
 }

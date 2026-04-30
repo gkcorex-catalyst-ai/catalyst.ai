@@ -1,9 +1,4 @@
 package com.gkcorex.catalyst.ai.dtos.subscription;
 
 public record PlanLimitsResponse(
-        String planName,
-        Integer maxTokensPerDay,
-        Integer maxProjects,
-        Boolean unlimitedAi
-) {
-}
+    String planName, Integer maxTokensPerDay, Integer maxProjects, Boolean unlimitedAi) {}

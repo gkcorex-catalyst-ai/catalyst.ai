@@ -7,9 +7,9 @@ import com.gkcorex.catalyst.ai.dtos.subscription.SubscriptionResponse;
 
 public interface SubscriptionService {
 
-    SubscriptionResponse getCurrentSubscription(Long userId);
+  SubscriptionResponse getCurrentSubscription(Long userId);
 
-    CheckoutResponse createCheckoutSessionUrl(Long userId, CheckoutRequest checkoutRequest);
+  CheckoutResponse createCheckoutSessionUrl(Long userId, CheckoutRequest checkoutRequest);
 
-    PortalResponse openCustomerPortal(Long userId);
+  PortalResponse openCustomerPortal(Long userId);
 }

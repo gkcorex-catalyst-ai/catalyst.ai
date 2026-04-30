@@ -1,30 +1,38 @@
 package com.gkcorex.catalyst.ai.entities;
 
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
+import jakarta.persistence.*;
 import java.time.Instant;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "projects")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Project {
 
-    @Id
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
 
-    String name;
+  @Column(nullable = false)
+  String name;
 
-    User owner;
+  @ManyToOne
+  @JoinColumn(name = "owner_id", nullable = false)
+  User owner;
 
-    Boolean isPublic;
+  Boolean isPublic;
 
-    Instant createdAt;
+  @CreationTimestamp Instant createdAt;
 
-    Instant updatedAt;
+  @UpdateTimestamp Instant updatedAt;
 
-    Instant deletedAt;
+  Instant deletedAt;
 }

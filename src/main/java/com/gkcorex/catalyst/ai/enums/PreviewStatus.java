@@ -1,8 +1,8 @@
 package com.gkcorex.catalyst.ai.enums;
 
 public enum PreviewStatus {
-    CREATING,
-    RUNNING,
-    FAILED,
-    TERMINATED
+  CREATING,
+  RUNNING,
+  FAILED,
+  TERMINATED
 }

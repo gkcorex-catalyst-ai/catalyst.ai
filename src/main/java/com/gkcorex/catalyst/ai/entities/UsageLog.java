@@ -1,32 +1,30 @@
 package com.gkcorex.catalyst.ai.entities;
 
 import jakarta.persistence.Id;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UsageLog {
 
-    @Id
-    Long id;
+  @Id Long id;
 
-    User user;
+  User user;
 
-    Project project;
+  Project project;
 
-    String action;
+  String action;
 
-    Integer tokensUsed;
+  Integer tokensUsed;
 
-    Integer durationMs;
+  Integer durationMs;
 
-    String metaData;
+  String metaData;
 
-    Instant createdAt;
+  Instant createdAt;
 }

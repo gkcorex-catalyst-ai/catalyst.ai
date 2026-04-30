@@ -2,35 +2,33 @@ package com.gkcorex.catalyst.ai.entities;
 
 import com.gkcorex.catalyst.ai.enums.MessageRole;
 import jakarta.persistence.Id;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChatMessage {
 
-    @Id
-    Long id;
+  @Id Long id;
 
-    Project project;
+  Project project;
 
-    ChatSession chatSession;
+  ChatSession chatSession;
 
-    String content;
+  String content;
 
-    /*
-        JSON Array of Tools Called
-     */
-    String toolCalls;
+  /*
+     JSON Array of Tools Called
+  */
+  String toolCalls;
 
-    Integer tokensUsed;
+  Integer tokensUsed;
 
-    MessageRole role;
+  MessageRole role;
 
-    Instant createdAt;
+  Instant createdAt;
 }

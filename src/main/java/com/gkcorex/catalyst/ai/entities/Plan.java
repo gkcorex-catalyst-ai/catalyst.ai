@@ -11,23 +11,22 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Plan {
 
-    @Id
-    Long id;
+  @Id Long id;
 
-    String name;
+  String name;
 
-    String stripePriceId;
+  String stripePriceId;
 
-    Integer maxProjects;
+  Integer maxProjects;
 
-    Integer maxTokenPerDay;
+  Integer maxTokenPerDay;
 
-    Integer maxPreviews;
+  Integer maxPreviews;
 
-    /*
-        Unlimited access to LLM, Ignore maxTokenPerDay if true
-     */
-    Boolean unlimitedAi;
+  /*
+     Unlimited access to LLM, Ignore maxTokenPerDay if true
+  */
+  Boolean unlimitedAi;
 
-    Boolean active;
+  Boolean active;
 }

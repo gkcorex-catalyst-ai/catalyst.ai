@@ -1,31 +1,38 @@
 package com.gkcorex.catalyst.ai.entities;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
-    @Id
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  Long id;
 
-    @Column(nullable = false)
-    String email;
+  @Column(nullable = false)
+  String email;
 
-    String passwordHash;
+  String passwordHash;
 
-    String name;
+  String name;
 
-    String avatarUrl;
+  String avatarUrl;
 
-    Instant createdAt;
+  @CreationTimestamp Instant createdAt;
 
-    Instant updatedAt;
+  @UpdateTimestamp Instant updatedAt;
 
-    Instant deletedAt;
+  Instant deletedAt;
 }

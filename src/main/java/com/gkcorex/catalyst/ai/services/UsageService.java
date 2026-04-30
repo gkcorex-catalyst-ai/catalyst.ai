@@ -5,7 +5,7 @@ import com.gkcorex.catalyst.ai.dtos.subscription.UsageTodayResponse;
 
 public interface UsageService {
 
-    UsageTodayResponse getTodayUsageOfUser(Long userId);
+  UsageTodayResponse getTodayUsageOfUser(Long userId);
 
-    PlanLimitsResponse getCurrentSubscriptionLimitsOfUser(Long userId);
+  PlanLimitsResponse getCurrentSubscriptionLimitsOfUser(Long userId);
 }

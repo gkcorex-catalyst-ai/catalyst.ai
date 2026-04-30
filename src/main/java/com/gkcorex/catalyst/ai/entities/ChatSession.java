@@ -1,26 +1,25 @@
 package com.gkcorex.catalyst.ai.entities;
 
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChatSession {
 
-    Project project;
+  Project project;
 
-    User user;
+  User user;
 
-    String title;
+  String title;
 
-    Instant createdAt;
+  Instant createdAt;
 
-    Instant updatedAt;
+  Instant updatedAt;
 
-    Instant deletedAt;
+  Instant deletedAt;
 }

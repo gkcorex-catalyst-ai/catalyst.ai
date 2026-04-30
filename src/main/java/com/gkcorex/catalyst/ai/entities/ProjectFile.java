@@ -1,32 +1,30 @@
 package com.gkcorex.catalyst.ai.entities;
 
 import jakarta.persistence.Id;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProjectFile {
 
-    @Id
-    Long id;
+  @Id Long id;
 
-    Project project;
+  Project project;
 
-    String path;
+  String path;
 
-    String minioObjectKey;
+  String minioObjectKey;
 
-    Instant createdAt;
+  Instant createdAt;
 
-    Instant updatedAt;
+  Instant updatedAt;
 
-    User createdBy;
+  User createdBy;
 
-    User updatedBy;
+  User updatedBy;
 }

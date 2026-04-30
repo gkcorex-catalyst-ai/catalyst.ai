@@ -2,38 +2,36 @@ package com.gkcorex.catalyst.ai.entities;
 
 import com.gkcorex.catalyst.ai.enums.SubscriptionStatus;
 import jakarta.persistence.Id;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Subscription {
 
-    @Id
-    Long id;
+  @Id Long id;
 
-    User user;
+  User user;
 
-    Plan plan;
+  Plan plan;
 
-    String stripeCustomerId;
+  String stripeCustomerId;
 
-    String subscriptionId;
+  String subscriptionId;
 
-    SubscriptionStatus status;
+  SubscriptionStatus status;
 
-    Instant currentPeriodStart;
+  Instant currentPeriodStart;
 
-    Instant currentPeriodEnd;
+  Instant currentPeriodEnd;
 
-    Boolean cancelAtPeriodEnd = false;
+  Boolean cancelAtPeriodEnd = false;
 
-    Instant createdAt;
+  Instant createdAt;
 
-    Instant updateAt;
+  Instant updateAt;
 }

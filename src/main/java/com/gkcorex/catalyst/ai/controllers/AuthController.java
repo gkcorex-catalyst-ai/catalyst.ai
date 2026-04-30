@@ -6,35 +6,35 @@ import com.gkcorex.catalyst.ai.dtos.auth.SignUpRequest;
 import com.gkcorex.catalyst.ai.dtos.auth.UserProfileResponse;
 import com.gkcorex.catalyst.ai.services.AuthService;
 import com.gkcorex.catalyst.ai.services.UserService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthController {
 
-    private final AuthService authService;
+  AuthService authService;
 
-    private final UserService userService;
+  UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signup(SignUpRequest signUpRequest){
-        return ResponseEntity.ok(authService.signup(signUpRequest));
-    }
+  @PostMapping("/signup")
+  public ResponseEntity<AuthResponse> signup(@RequestBody SignUpRequest signUpRequest) {
+    return ResponseEntity.ok(authService.signup(signUpRequest));
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(LoginRequest loginRequest){
-        return ResponseEntity.ok(authService.login(loginRequest));
-    }
+  @PostMapping("/login")
+  public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+    return ResponseEntity.ok(authService.login(loginRequest));
+  }
 
-    @GetMapping("/me")
-    public ResponseEntity<UserProfileResponse> getProfile(){
-        Long userId = 1L;
-        return ResponseEntity.ok(userService.getProfile(userId));
-    }
+  @GetMapping("/me")
+  public ResponseEntity<UserProfileResponse> getProfile() {
+    Long userId = 1L;
+    return ResponseEntity.ok(userService.getProfile(userId));
+  }
 }

@@ -6,7 +6,7 @@ import com.gkcorex.catalyst.ai.dtos.auth.SignUpRequest;
 
 public interface AuthService {
 
-    AuthResponse login(LoginRequest loginRequest);
+  AuthResponse login(LoginRequest loginRequest);
 
-    AuthResponse signup(SignUpRequest signUpRequest);
+  AuthResponse signup(SignUpRequest signUpRequest);
 }

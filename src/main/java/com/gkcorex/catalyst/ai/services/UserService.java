@@ -4,5 +4,5 @@ import com.gkcorex.catalyst.ai.dtos.auth.UserProfileResponse;
 
 public interface UserService {
 
-    UserProfileResponse getProfile(Long userId);
+  UserProfileResponse getProfile(Long userId);
 }

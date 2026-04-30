@@ -1,27 +1,26 @@
 package com.gkcorex.catalyst.ai.entities;
 
 import com.gkcorex.catalyst.ai.enums.ProjectRole;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProjectMember {
 
-    ProjectMemberId id;
+  ProjectMemberId id;
 
-    Project project;
+  Project project;
 
-    User user;
+  User user;
 
-    ProjectRole projectRole;
+  ProjectRole projectRole;
 
-    Instant invitedAt;
+  Instant invitedAt;
 
-    Instant acceptedAt;
+  Instant acceptedAt;
 }
