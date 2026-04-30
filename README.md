@@ -23,7 +23,8 @@ Design:
 **Dependencies:** 
 - Spring Data JPA
 - PostgreSQL Driver
-- Validation
+- Spring Validation
+- Spring Security
 
 **Plugins:** 
 - Lombok
