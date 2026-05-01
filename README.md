@@ -15,6 +15,7 @@
 - Auth Service
 - Project Service
 - Project Member Service
+- User Service
 
 Design:
 - 3 Layer (Controller, Service, Repository)
