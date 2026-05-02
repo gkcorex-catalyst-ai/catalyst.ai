@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface ProjectService {
 
-  List<ProjectSummaryResponse> getUserProjects(Long userId);
+  List<ProjectSummaryResponse> getUserProjects();
 
-  ProjectResponse getUserProject(Long userId, Long projectId);
+  ProjectResponse getUserProject(Long projectId);
 
-  ProjectResponse createProject(Long userId, ProjectRequest projectRequest);
+  ProjectResponse createProject(ProjectRequest projectRequest);
 
-  ProjectResponse updateProject(Long userId, Long projectId, ProjectRequest projectRequest);
+  ProjectResponse updateProject(Long projectId, ProjectRequest projectRequest);
 
-  void softDelete(Long userId, Long projectId);
+  void softDelete(Long projectId);
 }

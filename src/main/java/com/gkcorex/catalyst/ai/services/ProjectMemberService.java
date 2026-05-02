@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface ProjectMemberService {
 
-  List<MemberResponse> getProjectMembers(Long userId, Long projectId);
+  List<MemberResponse> getProjectMembers(Long projectId);
 
-  MemberResponse inviteMember(Long userId, Long projectId, InviteMemberRequest inviteMemberRequest);
+  MemberResponse inviteMember(Long projectId, InviteMemberRequest inviteMemberRequest);
 
   MemberResponse updateMemberRole(
-      Long userId, Long projectId, Long memberId, UpdateMemberRoleRequest updateMemberRoleRequest);
+      Long projectId, Long memberId, UpdateMemberRoleRequest updateMemberRoleRequest);
 
-  void deleteMember(Long userId, Long projectId, Long memberId);
+  void deleteMember(Long projectId, Long memberId);
 }

@@ -13,6 +13,7 @@ import com.gkcorex.catalyst.ai.mappers.ProjectMapper;
 import com.gkcorex.catalyst.ai.repositories.ProjectMemberRepository;
 import com.gkcorex.catalyst.ai.repositories.ProjectRepository;
 import com.gkcorex.catalyst.ai.repositories.UserRepository;
+import com.gkcorex.catalyst.ai.security.JwtAuthUtil;
 import com.gkcorex.catalyst.ai.services.ProjectService;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
@@ -36,20 +37,25 @@ public class ProjectServiceImpl implements ProjectService {
 
   ProjectMapper projectMapper;
 
+  JwtAuthUtil jwtAuthUtil;
+
   @Override
-  public List<ProjectSummaryResponse> getUserProjects(Long userId) {
+  public List<ProjectSummaryResponse> getUserProjects() {
+    Long userId = jwtAuthUtil.getCurrentUserId();
     List<Project> projects = projectRepository.findAllAccessibleByUser(userId);
     return projectMapper.mapEntitiesToSummaryResponses(projects);
   }
 
   @Override
-  public ProjectResponse getUserProject(Long userId, Long projectId) {
+  public ProjectResponse getUserProject(Long projectId) {
+    Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);
     return projectMapper.mapEntityToResponse(project);
   }
 
   @Override
-  public ProjectResponse createProject(Long userId, ProjectRequest projectRequest) {
+  public ProjectResponse createProject(ProjectRequest projectRequest) {
+    Long userId = jwtAuthUtil.getCurrentUserId();
     User owner =
         userRepository
             .findById(userId)
@@ -72,7 +78,8 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public ProjectResponse updateProject(Long userId, Long projectId, ProjectRequest projectRequest) {
+  public ProjectResponse updateProject(Long projectId, ProjectRequest projectRequest) {
+    Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);
     project.setName(projectRequest.name());
     project = projectRepository.save(project);
@@ -80,7 +87,8 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public void softDelete(Long userId, Long projectId) {
+  public void softDelete(Long projectId) {
+    Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);
     project.setDeletedAt(Instant.now());
     projectRepository.save(project);

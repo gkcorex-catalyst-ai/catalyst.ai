@@ -2,10 +2,14 @@ package com.gkcorex.catalyst.ai.entities;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
@@ -15,7 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +36,9 @@ public class User {
   @UpdateTimestamp Instant updatedAt;
 
   Instant deletedAt;
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of();
+  }
 }

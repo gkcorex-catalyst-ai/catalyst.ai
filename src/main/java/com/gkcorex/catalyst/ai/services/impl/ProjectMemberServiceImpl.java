@@ -12,6 +12,7 @@ import com.gkcorex.catalyst.ai.mappers.ProjectMemberMapper;
 import com.gkcorex.catalyst.ai.repositories.ProjectMemberRepository;
 import com.gkcorex.catalyst.ai.repositories.ProjectRepository;
 import com.gkcorex.catalyst.ai.repositories.UserRepository;
+import com.gkcorex.catalyst.ai.security.JwtAuthUtil;
 import com.gkcorex.catalyst.ai.services.ProjectMemberService;
 import jakarta.transaction.Transactional;
 import java.time.Instant;
@@ -38,9 +39,10 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
   UserRepository userRepository;
 
+  JwtAuthUtil jwtAuthUtil;
+
   @Override
-  public List<MemberResponse> getProjectMembers(Long userId, Long projectId) {
-    Project project = getAccessibleProjectById(userId, projectId);
+  public List<MemberResponse> getProjectMembers(Long projectId) {
     List<MemberResponse> memberResponseList = new ArrayList<>();
     return projectMemberRepository.findByIdProjectId(projectId).stream()
         .map(projectMemberMapper::mapProjectMemberToMemberResponse)
@@ -48,8 +50,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
   }
 
   @Override
-  public MemberResponse inviteMember(
-      Long userId, Long projectId, InviteMemberRequest inviteMemberRequest) {
+  public MemberResponse inviteMember(Long projectId, InviteMemberRequest inviteMemberRequest) {
+    Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);
     User invitee =
         userRepository
@@ -78,7 +80,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
   @Override
   public MemberResponse updateMemberRole(
-      Long userId, Long projectId, Long memberId, UpdateMemberRoleRequest updateMemberRoleRequest) {
+      Long projectId, Long memberId, UpdateMemberRoleRequest updateMemberRoleRequest) {
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
     ProjectMember member =
         projectMemberRepository
@@ -92,7 +94,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
   }
 
   @Override
-  public void deleteMember(Long userId, Long projectId, Long memberId) {
+  public void deleteMember(Long projectId, Long memberId) {
     ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
     if (!projectMemberRepository.existsById(projectMemberId))
       throw new ResponseStatusException(
