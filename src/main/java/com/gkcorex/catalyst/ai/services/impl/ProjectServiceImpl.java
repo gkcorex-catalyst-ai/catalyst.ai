@@ -21,6 +21,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,6 +48,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
+  @PreAuthorize("@security.canViewProject(#projectId)")
   public ProjectResponse getUserProject(Long projectId) {
     Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);
@@ -78,6 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
+  @PreAuthorize("@security.canEditProject(#projectId)")
   public ProjectResponse updateProject(Long projectId, ProjectRequest projectRequest) {
     Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);
@@ -87,6 +90,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
+  @PreAuthorize("@security.canDeleteProject(#projectId)")
   public void softDelete(Long projectId) {
     Long userId = jwtAuthUtil.getCurrentUserId();
     Project project = getAccessibleProjectById(userId, projectId);

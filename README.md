@@ -20,6 +20,9 @@
 Design:
 - 3 Layer (Controller, Service, Repository)
 - Global Exception Handlers
+- JWT UsernamePassword Authentication & Filters
+- Security Context Holder Impl
+- Web & Method Security Authorization with Roles & Permissions
 
 **Dependencies:** 
 - Spring Data JPA

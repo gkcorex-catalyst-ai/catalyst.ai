@@ -1,7 +1,6 @@
 package com.gkcorex.catalyst.ai.security;
 
 import com.gkcorex.catalyst.ai.entities.User;
-import com.gkcorex.catalyst.ai.enums.ProjectRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -11,7 +10,6 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +27,6 @@ public class JwtAuthUtil {
     return Jwts.builder()
         .subject(user.getUsername())
         .claim("userId", user.getId().toString())
-        .claim("roles", List.of(ProjectRole.OWNER.name()))
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
         .signWith(getSecretKey())
@@ -37,22 +34,13 @@ public class JwtAuthUtil {
   }
 
   public JwtUserPrincipal verifyAccessToken(String token) {
-
     Claims claims =
         Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).getPayload();
 
     Long userId = Long.parseLong(claims.get("userId", String.class));
     String email = claims.getSubject();
 
-    List<String> roles = claims.get("roles", List.class);
-
-    List<SimpleGrantedAuthority> authorities =
-        roles.stream()
-            .map(ProjectRole::valueOf)
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-            .toList();
-
-    return new JwtUserPrincipal(userId, email, authorities);
+    return new JwtUserPrincipal(userId, email, List.of());
   }
 
   public Long getCurrentUserId() {
