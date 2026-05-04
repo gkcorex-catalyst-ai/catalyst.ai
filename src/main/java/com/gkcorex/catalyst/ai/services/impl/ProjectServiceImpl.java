@@ -41,7 +41,6 @@ public class ProjectServiceImpl implements ProjectService {
   JwtAuthUtil jwtAuthUtil;
 
   @Override
-  @PreAuthorize("@security.canViewProject(#projectId)")
   public List<ProjectSummaryResponse> getUserProjects() {
     Long userId = jwtAuthUtil.getCurrentUserId();
     List<Project> projects = projectRepository.findAllAccessibleByUser(userId);
