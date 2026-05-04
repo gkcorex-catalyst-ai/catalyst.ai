@@ -17,7 +17,7 @@
 - Project Member Service
 - User Service
 
-Design:
+Design & Implementation:
 - 3 Layer (Controller, Service, Repository)
 - Global Exception Handlers
 - JWT UsernamePassword Authentication & Filters
