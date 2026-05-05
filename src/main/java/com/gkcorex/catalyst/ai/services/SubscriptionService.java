@@ -1,15 +1,20 @@
 package com.gkcorex.catalyst.ai.services;
 
-import com.gkcorex.catalyst.ai.dtos.subscription.CheckoutRequest;
-import com.gkcorex.catalyst.ai.dtos.subscription.CheckoutResponse;
-import com.gkcorex.catalyst.ai.dtos.subscription.PortalResponse;
 import com.gkcorex.catalyst.ai.dtos.subscription.SubscriptionResponse;
+import com.gkcorex.catalyst.ai.enums.SubscriptionStatus;
+import java.time.Instant;
 
 public interface SubscriptionService {
 
-  SubscriptionResponse getCurrentSubscription(Long userId);
+  SubscriptionResponse getCurrentSubscription();
 
-  CheckoutResponse createCheckoutSessionUrl(Long userId, CheckoutRequest checkoutRequest);
+  void activateSubscription(Long userId, Long planId, String subscriptionId, String customerId);
 
-  PortalResponse openCustomerPortal(Long userId);
+  void updateSubscription(
+      String id,
+      SubscriptionStatus status,
+      Instant periodStart,
+      Instant periodEnd,
+      Long planId,
+      Boolean cancelAtPeriodEnd);
 }

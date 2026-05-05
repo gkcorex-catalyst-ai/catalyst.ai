@@ -2,10 +2,14 @@ package com.gkcorex.catalyst.ai.advices;
 
 import com.gkcorex.catalyst.ai.exceptions.BadRequestException;
 import com.gkcorex.catalyst.ai.exceptions.ResourceNotFoundException;
+import io.jsonwebtoken.JwtException;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +30,37 @@ public class GlobalExceptionHandler {
     ApiError apiError =
         new ApiError(
             HttpStatus.NOT_FOUND, ex.getResourceName() + " with Id: " + ex.getResourceId());
+    log.error(apiError.toString(), ex);
+    return ResponseEntity.status(apiError.status()).body(apiError);
+  }
+
+  @ExceptionHandler(UsernameNotFoundException.class)
+  public ResponseEntity<ApiError> handleUsernameNotFound(UsernameNotFoundException ex) {
+    ApiError apiError =
+        new ApiError(HttpStatus.NOT_FOUND, "Username not found with username: " + ex.getMessage());
+    log.error(apiError.toString(), ex);
+    return ResponseEntity.status(apiError.status()).body(apiError);
+  }
+
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<ApiError> handleAuthentication(AuthenticationException ex) {
+    ApiError apiError =
+        new ApiError(HttpStatus.UNAUTHORIZED, "Authentication failed:" + ex.getMessage());
+    log.error(apiError.toString(), ex);
+    return ResponseEntity.status(apiError.status()).body(apiError);
+  }
+
+  @ExceptionHandler(JwtException.class)
+  public ResponseEntity<ApiError> handleJwt(JwtException ex) {
+    ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Invalid JWT: " + ex.getMessage());
+    log.error(apiError.toString(), ex);
+    return ResponseEntity.status(apiError.status()).body(apiError);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex) {
+    ApiError apiError =
+        new ApiError(HttpStatus.FORBIDDEN, "Access Denied: Insufficient Permissions");
     log.error(apiError.toString(), ex);
     return ResponseEntity.status(apiError.status()).body(apiError);
   }

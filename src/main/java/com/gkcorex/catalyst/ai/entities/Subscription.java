@@ -19,8 +19,6 @@ public class Subscription {
 
   Plan plan;
 
-  String stripeCustomerId;
-
   String subscriptionId;
 
   SubscriptionStatus status;

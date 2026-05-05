@@ -17,7 +17,7 @@
 - Project Member Service
 - User Service
 
-Design & Implementation:
+**Design & Implementation:**
 - 3 Layer (Controller, Service, Repository)
 - Global Exception Handlers
 - JWT UsernamePassword Authentication & Filters
@@ -45,3 +45,7 @@ Design & Implementation:
 **API & Management:** 
 - REST API's
 - Postman
+
+**Payment & Subscription Management:** 
+- Stripe
+- Stripe Cli
