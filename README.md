@@ -49,3 +49,4 @@
 **Payment & Subscription Management:** 
 - Stripe
 - Stripe Cli
+- Webhooks
