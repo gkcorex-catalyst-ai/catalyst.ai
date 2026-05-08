@@ -117,7 +117,7 @@ public class StripePaymentProcessorImpl implements PaymentProcessorService {
 
   private void handleCheckoutSessionCompleted(Session session, Map<String, String> metadata) {
     if (Objects.isNull(session)) {
-      log.error("session object is null");
+      log.error("session object is null inside handleCheckoutSessionCompleted");
       return;
     }
 
@@ -137,7 +137,7 @@ public class StripePaymentProcessorImpl implements PaymentProcessorService {
 
   private void handleCustomerSubscriptionUpdated(Subscription subscription) {
     if (Objects.isNull(subscription)) {
-      log.error("subscription object is null");
+      log.error("subscription object is null inside handleCustomerSubscriptionUpdated");
       return;
     }
 
@@ -165,11 +165,42 @@ public class StripePaymentProcessorImpl implements PaymentProcessorService {
         subscription.getCancelAtPeriodEnd());
   }
 
-  private void handleCustomerSubscriptionDeleted(Subscription subscription) {}
+  private void handleCustomerSubscriptionDeleted(Subscription subscription) {
+      if (Objects.isNull(subscription)) {
+          log.error("subscription object is null inside handleCustomerSubscriptionDeleted");
+          return;
+      }
 
-  private void handleInvoicePaid(Invoice invoice) {}
+      subscriptionService.cancelSubscription(subscription.getId());
+  }
 
-  private void handelInvoicePaymentFailed(Invoice invoice) {}
+  private void handleInvoicePaid(Invoice invoice) {
+      String subId = extractSubscriptionId(invoice);
+      if(subId==null)
+          return;
+      try {
+          Subscription subscription = Subscription.retrieve(subId);
+
+          var item = subscription.getItems().getData().get(0);
+          Instant periodStart = toInstant(item.getCurrentPeriodStart());
+          Instant periodEnd = toInstant(item.getCurrentPeriodEnd());
+
+          subscriptionService.renewSubscriptionPeriod(
+                  subId,
+                  periodStart,
+                  periodEnd
+          );
+      } catch (StripeException ex){
+          throw new RuntimeException(ex);
+      }
+  }
+
+  private void handelInvoicePaymentFailed(Invoice invoice) {
+      String subId = extractSubscriptionId(invoice);
+      if(subId==null)
+          return;
+      subscriptionService.markSubscriptionPastDue(subId);
+  }
 
   private User getUser(Long userId) {
     return userRepository
@@ -198,5 +229,17 @@ public class StripePaymentProcessorImpl implements PaymentProcessorService {
   private Long resolvePlanId(Price price) {
     if (Objects.isNull(price) || Objects.isNull(price.getId())) return null;
     return planRepository.findByStripePriceId(price.getId()).map(Plan::getId).orElse(null);
+  }
+
+  private String extractSubscriptionId(Invoice invoice){
+      var parent = invoice.getParent();
+      if(parent == null)
+          return null;
+
+      var subDetails = parent.getSubscriptionDetails();
+      if(subDetails==null)
+          return null;
+
+      return subDetails.getSubscription();
   }
 }
