@@ -11,10 +11,16 @@ public interface SubscriptionService {
   void activateSubscription(Long userId, Long planId, String subscriptionId, String customerId);
 
   void updateSubscription(
-      String id,
+      String subscriptionId,
       SubscriptionStatus status,
       Instant periodStart,
       Instant periodEnd,
       Long planId,
       Boolean cancelAtPeriodEnd);
+
+    void cancelSubscription(String subscriptionId);
+
+    void renewSubscriptionPeriod(String subId, Instant periodStart, Instant periodEnd);
+
+    void markSubscriptionPastDue(String subId);
 }
