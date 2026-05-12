@@ -15,7 +15,8 @@
 - Auth Service
 - Project Service
 - Project Member Service
-- 
+- User Service
+
 **Design & Implementation:**
 - 3 Layer (Controller, Service, Repository)
 - Global Exception Handlers
